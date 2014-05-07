@@ -13,11 +13,11 @@ void main()
 {
 	setlocale(0, "Russian");
 	double xBegin, xEnd, dx, eps;
-	cout << "Введите начальное и конечное значения x (в радианах)" << endl;
+	cout << "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ x (пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)" << endl;
 	cin >> xBegin >> xEnd;
-	cout << "Введите шаг вычисления" << endl;
+	cout << "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" << endl;
 	cin >> dx;
-	cout << "Введите точность вычислений" << endl;
+	cout << "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" << endl;
 	cin >> eps;
 	while(xBegin <= xEnd)
 	{
@@ -49,7 +49,7 @@ long double value(long double x, long double e, bool boolean)
 long double fact(long long n) 
 {
 	long double res = 1;
-    for(long long i = 1; i <= n; i++)
+    	for(long long i = 1; i <= n; i++)
 		res *= i;
 	return res;
 }
