@@ -1,50 +1,87 @@
 #include <iostream>
+#include <fstream>
 #include <math.h>
 #include <conio.h>
 using namespace std;
 
-//С„СѓРЅРєС†РёСЏ РґР»СЏ СЂР°СЃСЃС‡РµС‚Р° С„Р°РєС‚РѕСЂРёР°Р»Р°
+//функция для рассчета факториала
 long double fact(long long n);
-//СЂРµРєСѓСЂСЃРёРІРЅР°СЏ Р¤СѓРЅРєС†РёСЏ РґР»СЏ СЂР°СЃСЃС‡РµС‚Р° Р·РЅР°С‡РµРЅРёСЏ С„СѓРЅРєС†РёРё (cosx)^2
-long double value(long double x, long double e, bool boolean);
+//рекурсивная Функция для рассчета значения функции (cosx)^2
+long double value(long double x, long double e, long double step, int k);
 
-static long double step;
-static int k;
- 
 void main() 
 {
 	setlocale(0, "Russian");
 	double xBegin, xEnd, dx, eps;
-	cout << "Р’РІРµРґРёС‚Рµ РЅР°С‡Р°Р»СЊРЅРѕРµ Рё РєРѕРЅРµС‡РЅРѕРµ Р·РЅР°С‡РµРЅРёСЏ x (РІ СЂР°РґРёР°РЅР°С…)" << endl;
-	cin >> xBegin >> xEnd;
-	cout << "Р’РІРµРґРёС‚Рµ С€Р°Рі РІС‹С‡РёСЃР»РµРЅРёСЏ" << endl;
-	cin >> dx;
-	cout << "Р’РІРµРґРёС‚Рµ С‚РѕС‡РЅРѕСЃС‚СЊ РІС‹С‡РёСЃР»РµРЅРёР№" << endl;
-	cin >> eps;
-	while(xBegin <= xEnd) //С†РёРєР» СЃ РїСЂРµРґСѓСЃР»РѕРІРёРµРј СЂР°СЃСЃС‡РµС‚Р° Р·РЅР°С‡РµРЅРёСЏ С„СѓРЅРєС†РёРё РґР»СЏ РїСЂРѕРјРµР¶СѓС‚РєР° СЃ Р·Р°РґР°РЅРЅС‹Рј С€Р°РіРѕРј
+	char c;
+	bool boolean;
+	cout << "Для ввода с файла введите f, для ввода с клавиатуры - k" << endl;
+	c = getchar();
+	if(c == 'f')
 	{
-		cout << "x = " << xBegin << endl;
-		cout << "(cos(x))^2 = " << value(xBegin, eps, true) << endl;
+	
+		fstream f;
+		f.open("D:\\in.txt");
+		if(f)
+		{
+			while(!f.eof())
+			{
+				f >> xBegin;
+				cout << "xBegin = " << xBegin << endl;
+				f >> xEnd;
+				cout << "xEnd = " << xEnd << endl;
+				f >> dx;
+				cout << "dx = " << dx << endl;
+				f >> eps;
+				cout << "eps = " << eps << endl;
+			}
+			f.close();
+		}
+		else
+		{
+			cout << "Файл не найден, продолжайте ввод данных с клавиатуры" << endl;
+			boolean = true;
+		}
+	}
+	if((c == 'k')||(boolean))
+	{
+		cout << "Введите начальное и конечное значения x (в радианах)" << endl;
+		cin >> xBegin >> xEnd;
+		cout << "Введите шаг вычисления" << endl;
+		cin >> dx;
+		cout << "Введите точность вычислений" << endl;
+		cin >> eps;
+	}
+
+	ofstream f;
+	f.open("D:\\out.txt");
+	f << "\tcos(x)^2 \t\t Формула Тейлора \t Контрольная формула" << endl;
+	cout << "\tcos(x)^2 \t\t Формула Тейлора \t Контрольная формула" << endl;
+	while(xBegin <= xEnd) //цикл с предусловием рассчета значения функции для промежутка с заданным шагом
+	{
+		cout << "\tx = " << xBegin << "\t\t\t" << value(xBegin, eps, 2, 1) << "\t\t\t" << pow(cos(xBegin), 2) << endl;
+		f << "\tx = " << xBegin << "\t\t\t" << value(xBegin, eps, 2, 1) << "\t\t\t" << pow(cos(xBegin), 2) << endl;
 		xBegin = xBegin + dx;
 	}
+	f.close();
 	getch();
 }
  
-long double value(long double x, long double e, bool boolean) 
+long double value(long double x, long double e, long double step, int k) 
 {
-	if (boolean)	//РїСЂРѕРІРµСЂРєР° РЅР° С‚Рѕ, РІС‹Р·С‹РІР°Р»Рё РёР»Рё РЅРµС‚ С„СѓРЅРєС†РёСЋ РґРѕ СЌС‚РѕРіРѕ
-	{
-		k = 1;		//РµСЃР»Рё РЅРµС‚ - Р·Р°РґР°РµРј РЅР°С‡Р°Р»СЊРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹: СЃС‚РµРїРµРЅСЊ Рё РєРѕСЌС„РёС†РёРµРЅС‚ СЂСЏРґР° РўРµР№Р»РѕСЂР°
-		step = 2.0;
-	}
+	//if (boolean)	//проверка на то, вызывали или нет функцию до этого
+	//{
+	//	k = 1;		//если нет - задаем начальные параметры: степень и коэфициент ряда Тейлора
+	//	step = 2.0;
+	//}
 	k *= -1;
 	long double sum = k * (pow(2, step - 1) * pow(x, step)/fact(step));
 	if (fabs(sum) <= e)	
-		return 1 + sum;	//РµСЃР»Рё РґРѕСЃС‚РёРіР»Р°СЃСЊ РЅРµРѕР±С…РѕРґРёРјР°СЏ С‚РѕС‡РЅРѕСЃС‚СЊ, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµРј Р·РЅР°С‡РµРЅРёРµ С„СѓРЅРєС†РёРё
+		return 1 + sum;	//если достиглась необходимая точность, то возвращаем значение функции
 	else 
 	{
-		step += 2.0;	//РёРЅР°С‡Рµ - СѓРІРµР»РёС‡РёРІР°РµРј СЃС‚РµРїРµРЅСЊ Рё РґРѕР±Р°РІР»СЏРµРј СЃР»РµРґСѓСЋС‰РёР№ С‡Р»РµРЅ СЂСЏРґР°
-		return sum + value(x, e, false);
+		step += 2.0;	//иначе - увеличиваем степень и добавляем следующий член ряда
+		return sum + value(x, e, step, k);
     }
 }
  
